@@ -8,72 +8,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #6c757d;
-            --success-color: #198754;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --body-bg: #f1f2f6;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--body-bg);
-            color: var(--dark-color);
-            margin: 0;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 20px;
-        }
-        .card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-            padding: 25px;
-        }
-        .card-header {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 15px;
-        }
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .table th, .table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #dee2e6;
-            text-align: left;
-        }
-        .table th {
-            background-color: #f8f9fa;
-        }
-        .btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: opacity 0.2s;
-        }
+        :root { --primary-color: #0d6efd; --secondary-color: #6c757d; --success-color: #198754; --danger-color: #dc3545; --warning-color: #ffc107; --light-color: #f8f9fa; --dark-color: #212529; --body-bg: #f1f2f6; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--body-bg); color: var(--dark-color); margin: 0; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 20px; }
+        .card { background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 25px; padding: 25px; }
+        .card-header { font-size: 24px; font-weight: 600; margin-bottom: 20px; border-bottom: 1px solid #dee2e6; padding-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 12px 15px; border-bottom: 1px solid #dee2e6; text-align: left; vertical-align: middle;}
+        .table th { background-color: #f8f9fa; }
+        .btn { padding: 8px 15px; border: none; border-radius: 5px; color: #fff; cursor: pointer; font-size: 14px; font-weight: 500; transition: opacity 0.2s; }
         .btn:hover { opacity: 0.8; }
         .btn-success { background-color: var(--success-color); }
         .btn-danger { background-color: var(--danger-color); }
         .btn-secondary { background-color: var(--secondary-color); margin-left: 5px; }
-        
+        .btn-refresh { background-color: var(--primary-color); padding: 5px 10px; font-size: 12px; }
         #login-screen { text-align: center; padding-top: 50px; }
-        #login-screen input {
-            font-size: 16px; padding: 10px; width: 300px; margin-bottom: 15px;
-        }
+        #login-screen input { font-size: 16px; padding: 10px; width: 300px; margin-bottom: 15px; }
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; margin-bottom: 5px; }
         .form-group input { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
@@ -81,7 +31,6 @@
     </style>
 </head>
 <body>
-
     <div id="login-screen" class="container">
         <div class="card" style="max-width: 400px; margin: auto;">
             <h2>Đăng Nhập Admin</h2>
@@ -91,41 +40,31 @@
             <button class="btn" style="background-color: var(--primary-color);" id="admin-login-btn">Đăng Nhập</button>
         </div>
     </div>
-
     <div id="admin-dashboard" class="container" style="display: none;">
         <h1 style="text-align: center; margin-bottom: 30px;">Bảng Điều Khiển Admin</h1>
-
         <div class="card">
-            <div class="card-header"><i class="fa-solid fa-user-clock"></i> Yêu Cầu Đăng Ký Đang Chờ Duyệt</div>
+            <div class="card-header">
+                <span><i class="fa-solid fa-user-clock"></i> Yêu Cầu Đăng Ký Đang Chờ Duyệt</span>
+                <button class="btn btn-refresh" id="refresh-btn"><i class="fa-solid fa-sync"></i> Tải lại</button>
+            </div>
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Tên đăng nhập</th>
-                        <th>Email</th>
-                        <th>Hành động</th>
-                    </tr>
+                    <tr><th>Tên đăng nhập</th><th>Email</th><th>Hành động</th></tr>
                 </thead>
-                <tbody id="pending-users-table">
-                    </tbody>
+                <tbody id="pending-users-table"></tbody>
             </table>
         </div>
-
         <div class="card">
-            <div class="card-header"><i class="fa-solid fa-users-gear"></i> Quản Lý Người Dùng Đã Duyệt</div>
+            <div class="card-header"><span><i class="fa-solid fa-users-gear"></i> Quản Lý Người Dùng Đã Duyệt</span></div>
             <table class="table">
                 <thead>
-                    <tr>
-                        <th>Tên đăng nhập</th>
-                        <th>Hành động</th>
-                    </tr>
+                    <tr><th>Tên đăng nhập</th><th>Hành động</th></tr>
                 </thead>
-                <tbody id="approved-users-table">
-                    </tbody>
+                <tbody id="approved-users-table"></tbody>
             </table>
         </div>
-
         <div class="card">
-            <div class="card-header"><i class="fa-solid fa-user-plus"></i> Thêm Người Dùng Thủ Công</div>
+            <div class="card-header"><span><i class="fa-solid fa-user-plus"></i> Thêm Người Dùng Thủ Công</span></div>
             <form id="manual-add-user-form">
                 <div class="form-group">
                     <label for="manual-username">Tên đăng nhập mới:</label>
@@ -143,166 +82,167 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // --- KHAI BÁO BIẾN ---
-    const ADMIN_PASSWORD = 'mrdanelvip'; // Mật khẩu để vào trang admin
-    const PENDING_USERS_KEY = 'tool_pendingUsers'; // Khóa để lưu user chờ duyệt
-    const APPROVED_USERS_KEY = 'tool_approvedUsers'; // Khóa để lưu user đã duyệt
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLfr6CJV6QN-F0HGCGtIrDWughIiWt2x-bW6lb59PUVdeWEDGP6wEoEa0Rk8C77EFtIg/exec';
+    const ADMIN_PASSWORD = 'mrdanelvip'; 
 
     const loginScreen = document.getElementById('login-screen');
     const adminDashboard = document.getElementById('admin-dashboard');
     const adminLoginBtn = document.getElementById('admin-login-btn');
     const adminPasswordInput = document.getElementById('admin-password-input');
-
-    const pendingUsersTable = document.getElementById('pending-users-table');
-    const approvedUsersTable = document.getElementById('approved-users-table');
-    const manualAddUserForm = document.getElementById('manual-add-user-form');
-
-    // --- HÀM HỖ TRỢ ---
-    // Lấy dữ liệu từ localStorage
-    const getData = (key) => JSON.parse(localStorage.getItem(key)) || [];
-    // Lưu dữ liệu vào localStorage
-    const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+    const refreshBtn = document.getElementById('refresh-btn');
 
     // --- XỬ LÝ ĐĂNG NHẬP ADMIN ---
     adminLoginBtn.addEventListener('click', () => {
         if (adminPasswordInput.value === ADMIN_PASSWORD) {
             loginScreen.style.display = 'none';
             adminDashboard.style.display = 'block';
-            initializeDashboard();
+            fetchAllUsers();
         } else {
             Swal.fire('Lỗi!', 'Mật khẩu không chính xác.', 'error');
         }
     });
-
-    // --- KHỞI TẠO BẢNG ĐIỀU KHIỂN ---
-    function initializeDashboard() {
-        renderPendingUsers();
-        renderApprovedUsers();
-
-        // Thêm event listeners cho các nút
-        pendingUsersTable.addEventListener('click', handlePendingAction);
-        approvedUsersTable.addEventListener('click', handleApprovedAction);
-        manualAddUserForm.addEventListener('submit', handleManualAdd);
-    }
     
-    // --- HIỂN THỊ DANH SÁCH ---
-    function renderPendingUsers() {
-        const pendingUsers = getData(PENDING_USERS_KEY);
-        pendingUsersTable.innerHTML = ''; // Xóa bảng cũ
+    refreshBtn.addEventListener('click', fetchAllUsers);
+
+    // --- LẤY VÀ HIỂN THỊ DỮ LIỆU ---
+    function fetchAllUsers() {
+        Swal.fire({ title: 'Đang tải dữ liệu...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+        fetch(SCRIPT_URL + '?action=getUsers')
+            .then(res => res.json())
+            .then(data => {
+                Swal.close();
+                if (data.success) {
+                    renderTables(data.users);
+                } else {
+                    Swal.fire('Lỗi', 'Không thể tải dữ liệu người dùng.', 'error');
+                }
+            })
+            .catch(err => Swal.fire('Lỗi Mạng', 'Không thể kết nối đến máy chủ.', 'error'));
+    }
+
+    function renderTables(users) {
+        const pendingUsersTable = document.getElementById('pending-users-table');
+        const approvedUsersTable = document.getElementById('approved-users-table');
+        pendingUsersTable.innerHTML = '';
+        approvedUsersTable.innerHTML = '';
+        
+        const pendingUsers = users.filter(u => u.status === 'pending');
+        const approvedUsers = users.filter(u => u.status === 'approved');
+
+        // Render pending users
         if (pendingUsers.length === 0) {
             pendingUsersTable.innerHTML = '<tr><td colspan="3" class="no-requests">Không có yêu cầu nào đang chờ.</td></tr>';
-            return;
+        } else {
+            pendingUsers.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.email || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-success" onclick="updateUserStatus('${user.username}', 'approved')">Duyệt</button>
+                        <button class="btn btn-danger btn-secondary" onclick="deleteUser('${user.username}', true)">Từ chối</button>
+                    </td>
+                `;
+                pendingUsersTable.appendChild(row);
+            });
         }
-        pendingUsers.forEach(user => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${user.username}</td>
-                <td>${user.email}</td>
-                <td>
-                    <button class="btn btn-success" data-action="approve" data-username="${user.username}">Duyệt</button>
-                    <button class="btn btn-danger btn-secondary" data-action="deny" data-username="${user.username}">Từ chối</button>
-                </td>
-            `;
-            pendingUsersTable.appendChild(row);
-        });
-    }
-
-    function renderApprovedUsers() {
-        const approvedUsers = getData(APPROVED_USERS_KEY);
-        approvedUsersTable.innerHTML = ''; // Xóa bảng cũ
+        
+        // Render approved users
         if (approvedUsers.length === 0) {
             approvedUsersTable.innerHTML = '<tr><td colspan="2" class="no-requests">Chưa có người dùng nào được duyệt.</td></tr>';
-            return;
-        }
-        approvedUsers.forEach(user => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${user.username}</td>
-                <td>
-                    <button class="btn btn-danger" data-action="delete" data-username="${user.username}">Xóa</button>
-                </td>
-            `;
-            approvedUsersTable.appendChild(row);
-        });
-    }
-    
-    // --- XỬ LÝ HÀNH ĐỘNG ---
-    function handlePendingAction(e) {
-        const action = e.target.dataset.action;
-        const username = e.target.dataset.username;
-        if (!action || !username) return;
-
-        let pendingUsers = getData(PENDING_USERS_KEY);
-        const userToProcess = pendingUsers.find(u => u.username === username);
-
-        if (action === 'approve') {
-            let approvedUsers = getData(APPROVED_USERS_KEY);
-            // Thêm vào danh sách đã duyệt (chỉ cần username và pass)
-            approvedUsers.push({ username: userToProcess.username, password: userToProcess.password });
-            setData(APPROVED_USERS_KEY, approvedUsers);
-            Swal.fire('Thành công!', `Đã duyệt tài khoản ${username}.`, 'success');
-        } else { // deny
-            Swal.fire('Thông báo', `Đã từ chối tài khoản ${username}.`, 'info');
-        }
-
-        // Xóa khỏi danh sách chờ
-        pendingUsers = pendingUsers.filter(u => u.username !== username);
-        setData(PENDING_USERS_KEY, pendingUsers);
-        
-        // Cập nhật lại giao diện
-        renderPendingUsers();
-        renderApprovedUsers();
-    }
-
-    function handleApprovedAction(e) {
-        const action = e.target.dataset.action;
-        const username = e.target.dataset.username;
-        if (action === 'delete') {
-            Swal.fire({
-                title: 'Bạn có chắc không?',
-                text: `Bạn sẽ xóa vĩnh viễn tài khoản ${username}!`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Vâng, xóa đi!',
-                cancelButtonText: 'Hủy'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let approvedUsers = getData(APPROVED_USERS_KEY);
-                    approvedUsers = approvedUsers.filter(u => u.username !== username);
-                    setData(APPROVED_USERS_KEY, approvedUsers);
-                    renderApprovedUsers();
-                    Swal.fire('Đã xóa!', `Tài khoản ${username} đã được xóa.`, 'success');
-                }
+        } else {
+            approvedUsers.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td><button class="btn btn-danger" onclick="deleteUser('${user.username}')">Xóa</button></td>
+                `;
+                approvedUsersTable.appendChild(row);
             });
         }
     }
+    
+    // --- HÀNH ĐỘNG CỦA ADMIN (gọi trực tiếp từ HTML) ---
+    window.updateUserStatus = function(username, newStatus) {
+        Swal.fire({ title: 'Đang xử lý...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+        fetch(SCRIPT_URL + '?action=updateStatus', {
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify({ username, newStatus })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                Swal.fire('Thành công!', `Đã duyệt tài khoản ${username}.`, 'success');
+                fetchAllUsers();
+            } else {
+                Swal.fire('Lỗi', data.message, 'error');
+            }
+        }).catch(err => Swal.fire('Lỗi Mạng', 'Không thể kết nối.', 'error'));
+    }
 
-    function handleManualAdd(e) {
+    window.deleteUser = function(username, isDeny = false) {
+        const actionText = isDeny ? 'từ chối' : 'xóa';
+        Swal.fire({
+            title: 'Bạn có chắc không?',
+            text: `Bạn sẽ ${actionText} vĩnh viễn tài khoản ${username}!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: `Vâng, ${actionText} đi!`,
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'Đang xử lý...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                fetch(SCRIPT_URL + '?action=deleteUser', {
+                    method: 'POST',
+                    mode: 'cors',
+                    body: JSON.stringify({ username })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        Swal.fire('Đã xong!', `Tài khoản ${username} đã được ${actionText}.`, 'success');
+                        fetchAllUsers();
+                    } else {
+                         Swal.fire('Lỗi', data.message, 'error');
+                    }
+                }).catch(err => Swal.fire('Lỗi Mạng', 'Không thể kết nối.', 'error'));
+            }
+        });
+    }
+
+    // --- THÊM THỦ CÔNG ---
+    document.getElementById('manual-add-user-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const usernameInput = document.getElementById('manual-username');
         const passwordInput = document.getElementById('manual-password');
         const username = usernameInput.value.trim();
         const password = passwordInput.value.trim();
-
         if(!username || !password) {
             Swal.fire('Lỗi!', 'Vui lòng nhập đủ tên và mật khẩu.', 'error');
             return;
         }
 
-        let approvedUsers = getData(APPROVED_USERS_KEY);
-        if(approvedUsers.some(u => u.username === username)) {
-            Swal.fire('Lỗi!', 'Tên đăng nhập này đã tồn tại.', 'error');
-            return;
-        }
-
-        approvedUsers.push({ username, password });
-        setData(APPROVED_USERS_KEY, approvedUsers);
-        renderApprovedUsers();
-        Swal.fire('Thành công!', `Đã thêm tài khoản ${username}.`, 'success');
-        usernameInput.value = '';
-        passwordInput.value = '';
-    }
+        Swal.fire({ title: 'Đang thêm...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+        fetch(SCRIPT_URL + '?action=addUserManual', {
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify({ username, password })
+        })
+        .then(res => res.json())
+        .then(data => {
+             if(data.success) {
+                Swal.fire('Thành công!', `Đã thêm tài khoản ${username}.`, 'success');
+                usernameInput.value = '';
+                passwordInput.value = '';
+                fetchAllUsers();
+            } else {
+                 Swal.fire('Lỗi', data.message, 'error');
+            }
+        }).catch(err => Swal.fire('Lỗi Mạng', 'Không thể kết nối.', 'error'));
+    });
 });
 </script>
 </body>
